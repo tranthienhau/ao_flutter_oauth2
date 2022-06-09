@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:ao_flutter_oauth2/ao_flutter_oauth2.dart';
 import 'package:ao_flutter_oauth2/ao_flutter_oauth2_app.dart';
 import 'package:ao_flutter_oauth2_example/app/architecture/base_view_model.dart';
 import 'package:ao_flutter_oauth2_example/app/router/navigator_paramter.dart';
@@ -13,6 +16,8 @@ class LoginScreenViewModel extends BaseViewModel {
 
   String _email = '';
   String _password = '';
+
+  bool isAvailableAppleSignIn = false;
 
   void email(String email) {
     _email = email;
@@ -71,7 +76,30 @@ class LoginScreenViewModel extends BaseViewModel {
     }
   }
 
+  Future<void> loginWithApple() async {
+    try {
+      final user = await FirebaseAuthencation().loginWithApple();
+      if (user != null) {
+        final homeArg = HomeArgs(email: user.email, userName: user.displayName);
+        _navigateService.pushNamed(AppRoute.home, args: homeArg);
+      }
+    } catch (error) {
+      dialogService.hideLoading();
+      dialogService.showAlert(message: error.toString());
+    }
+  }
+
   void gotoSignUpScreen() {
     _navigateService.pushNamed(AppRoute.signUpScreen);
+  }
+
+  Future<void> checkLoginAppleAvailable() async {
+    if (Platform.isIOS) {
+      isAvailableAppleSignIn =
+          await FirebaseAuthencation().checkAppleSignInAvailable();
+    } else {
+      isAvailableAppleSignIn = false;
+    }
+    notifyListeners();
   }
 }

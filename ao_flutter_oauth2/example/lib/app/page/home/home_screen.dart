@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
     return StatefulBindingScope<HomeScreenViewModel>(
         onModelReady: (viewModel) {},
         builder: (context, viewModel, child) => Scaffold(
-              body: Column(children: []),
+              body: _buildBody(viewModel),
             ));
   }
 

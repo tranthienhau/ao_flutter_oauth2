@@ -143,6 +143,7 @@ class FirebaseAuthencation {
       // }
       // return firebaseUser;
       case AuthorizationStatus.error:
+        print(result.error.toString());
         throw result.error.toString();
       case AuthorizationStatus.cancelled:
         throw 'Sign in aborted by user';

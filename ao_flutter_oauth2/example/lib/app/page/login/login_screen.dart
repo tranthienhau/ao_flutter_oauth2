@@ -2,6 +2,8 @@ import 'package:ao_flutter_oauth2_example/app/page/login/login_view_model.dart';
 import 'package:ao_flutter_oauth2_example/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+// ignore: library_prefixes
+import 'package:the_apple_sign_in/apple_sign_in_button.dart' as AppleSignIn;
 
 import '../../architecture/base_view.dart';
 
@@ -11,7 +13,9 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StatefulBindingScope<LoginScreenViewModel>(
-        onModelReady: (viewModel) {},
+        onModelReady: (viewModel) {
+          viewModel.checkLoginAppleAvailable();
+        },
         builder: (context, viewModel, child) => Scaffold(
               body: _buildBody(viewModel),
             ));
@@ -48,6 +52,8 @@ class LoginScreen extends StatelessWidget {
           ),
           SizedBox(height: 15.h),
           _buildControlSocialLogin(viewModel),
+          SizedBox(height: 10.h),
+          _buildAppleSignIn(viewModel),
           SizedBox(height: 40.h),
           TextButton(
               onPressed: () {
@@ -94,5 +100,15 @@ class LoginScreen extends StatelessWidget {
         },
         icon: Image.asset(Images.facebook,
             width: 48.w, height: 48.w, fit: BoxFit.fill));
+  }
+
+  Widget _buildAppleSignIn(LoginScreenViewModel viewModel) {
+    return AppleSignIn.AppleSignInButton(
+      style: AppleSignIn.ButtonStyle.black,
+      type: AppleSignIn.ButtonType.signIn,
+      onPressed: () {
+        viewModel.loginWithApple();
+      },
+    );
   }
 }
